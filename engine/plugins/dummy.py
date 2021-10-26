@@ -2,11 +2,10 @@
 
 import os
 
-# KavMain 클래스
+# CLBMain 클래스
 class CLBMain:
-    # 플러그인 엔진을 초기화
-    # 인력값 : plugins_path - 플러그인 엔진의 위치
-    def init(self, plugins_path):  # 플러그인 엔진 초기화
+    # 입력값 : plugins_path - 플러그인 엔진의 위치
+    def init(self, plugins_path):  # 플러그인 엔진 초기화 단계
         # 진단/치료하는 악성코드 이름
         self.name = 'Dummy-Test-File (not a virus)'
         # 악성코드 패턴 등록
@@ -14,26 +13,24 @@ class CLBMain:
 
         return 0  # 플러그인 엔진 초기화 성공
 
-    # 플러그인 엔진 종료
-    # 리턴값 : 0 - 성공, 0 이외의 값 - 실패
+    # 플러그인 엔진 종료 (0일 경우, 성공)
     def uninit(self):
         del self.name  # 메모리 해제 (악성코드 이름 관련)
         del self.pattern  # 메모리 해제 (악성코드 패턴)
 
         return 0  # 플러그인 엔진 종료 성공
 
-    # 악성코드를 검사한다.
-    # 입력값 : filehandle  - 파일 핸들
-    #         filename    - 파일 이름
+    # 악성코드 검사
+    # 입력값 : filehandle  - 파일 핸들(미사용), filename    - 파일 이름
     def detect(self, filehandle, filename):
         try:
             fp = open(filename)
             buf = fp.read(len(self.pattern))  # 패턴은 49 Byte 크기
             fp.close()
 
-            # 악성코드 패턴을 비교
+            # 악성코드 패턴 비교
             if buf == self.pattern:
-                # 악성코드 패턴이 갖다면 결과 값을 리턴한다.
+                # 악성코드 패턴이 같으면 결과값 리턴하도록 함
                 return True, self.name, 0
         except IOError:
             pass
@@ -42,8 +39,7 @@ class CLBMain:
         return False, '', -1
 
     # 악성코드를 치료
-    # 입력값 : filename    - 파일 이름
-    #        : malware_id - 치료할 악성코드 ID
+    # 입력값 : filename    - 파일 이름, malware_id - 치료할 악성코드 ID
     def treat(self, filename, malware_id):
         try:
             # 악성코드 진단 결과 악성코드(0)인가?
@@ -65,7 +61,7 @@ class CLBMain:
     # 플러그인 엔진의 주요 정보
     def getinfo(self):
         info = dict()
-        info['author'] = 'Cloudbread'  # 제작자
+        info['author'] = 'Cloudbread'  # 제작자 구름빵
         info['version'] = '0.0'  # 버전
         info['engine_info'] = 'Dummy Scan Engine'  # 엔진 설명
         info['engine_name'] = 'dummy'  # 엔진 파일 이름
