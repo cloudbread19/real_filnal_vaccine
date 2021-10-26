@@ -161,7 +161,7 @@ def to_num(buf):
 # rsa 키를 생성
 # 인자값 : pu_fname - 공개키 파일 이름, pr_fname - 개인키 파일 이름
 # 리턴값 : 키 생성 성공 여부
-def create_key(pu_fname='key.prk', pr_fname='key.skr', debug=False):
+def create_key(pu_fname='key.pkr', pr_fname='key.skr', debug=False):
     p = generate_prime(128)  # 128bit 소수 생성
     q = generate_prime(128)  # 128bit 소수 생성
 

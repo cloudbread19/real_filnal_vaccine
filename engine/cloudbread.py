@@ -310,7 +310,7 @@ def print_detect(result):
 #listvirus의 콜백함수
 def listvirus_callback(plugin_name, vnames):
     for i in vnames:
-        print('%-50s [%s.kmd]'%(i, plugin_name))
+        print('%-50s [%s.clb]'%(i, plugin_name))
 
 
 def main():

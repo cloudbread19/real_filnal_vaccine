@@ -53,6 +53,8 @@ class Engine:
             decrypt_all=clbfile.CLB(clb_path, public_key)   # 모든 clb 파일 복호화
             memory_loading=clbfile.memory_loading(clb_file.split('.')[0], decrypt_all.body)
 
+            print(memory_loading) # # 여기여기여기 선생님들 여기가 안됩니다. -> eicar 변수변경 해결
+
             if memory_loading:  # 메모리 로딩 성공
                 self.clb_modules.append(memory_loading)
                 # 메모리 로딩에 성공한 CLB에서 플러그 엔진의 시간 읽어오기
@@ -209,7 +211,7 @@ class EngineInstance:
     # 플러그인 엔진이 진단/치료 할 수 있는 악성코드 목록을 얻음
     # 리턴값 : 악성코드 목록 (콜백함수 사용시 아무런 값도 없음)
     def having_virus_list(self, *callback):
-        virus_list = []  # 진단/치료 가능한 악성코드 목록
+        vlist = []  # 진단/치료 가능한 악성코드 목록
 
         argc = len(callback)  # 가변인자 확인
 
@@ -224,23 +226,25 @@ class EngineInstance:
             print('[*] CLBMain.having_virus_list() :')
 
         for i in self.clbmain_instance:
+            print(i) # 오류 : 값이 들어가는데 처리가 되지 않음.
             try:
-                list = i.having_virus_list()
+                ret = i.having_virus_list()
+                # print(ret) # 여기서 사라짐
 
                 # callback 함수가 있다면 callback 함수 호출
                 if isinstance(cb_fn, types.FunctionType):
-                    cb_fn(i.__module__, list)
+                    cb_fn(i.__module__, ret)
                 else:  # callback 함수가 없으면 악성코드 목록을 누적하여 리턴
-                    virus_list += list
+                    vlist += ret
 
                 if self.debug:
                     print('    [-] %s.listvirus() :' % i.__module__)
-                    for vname in list:
+                    for vname in ret:
                         print('        - %s' % vname)
             except AttributeError:
                 continue
 
-        return virus_list
+        return vlist
 
     # 백신엔진 인스턴스를 생성
     # 인자값 : clb_modules - 메모리에 로딩된 clb 모듈 리스트
@@ -428,8 +432,6 @@ class EngineInstance:
             self.final_detect['IO_errors'] +=1   # 파일 I/O Error 발생수
 
         return False, '', -1, -1
-
-
 
     # 플러그인 엔진이 악성코드 치료하도록 함
     # 입력값 : filename   - 악성코드 치료 대상 파일 이름,  virus_id - 감염된 악성코드 ID, engine_id  - 악성코드를 발견한 플러그인 엔진 ID

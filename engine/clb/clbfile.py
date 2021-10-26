@@ -271,6 +271,8 @@ class CLB(CLBConstants):
 # 입력값 : mod_name - 모듈 이름
 # 리턴값 : 로딩된 모듈 Object
 def memory_loading(mod_name, signature):
+    #print(mod_name)
+    # 여기도 문제있음
     if signature[:4] == '03F30D0A'.decode('hex'):  # pyc 시그너처가 존재하는가?
         try:
             code = marshal.loads(signature[8:])  # pyc에서 파이썬 코드를 로딩한다.

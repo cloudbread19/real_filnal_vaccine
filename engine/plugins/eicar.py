@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 import os
-from engine.plugins import cryptolib
+import cryptolib
 
 class CLBMain:
     # 플러그인 엔진 초기화
@@ -47,11 +47,11 @@ class CLBMain:
         return False  # 치료 실패 리턴
 
     def virus_list(self):  # 진단 가능한 악성코드 리스트
-        list = list()  # 리스트형 변수 선언
+        vlist= list()  # 리스트형 변수 선언
 
-        list.append('EICAR-Test-File')  # 진단/치료하는 악성코드 이름 등록
+        vlist.append('EICAR-Test-File')  # 진단/치료하는 악성코드 이름 등록
 
-        return list
+        return vlist
 
     # getinfo(self)
     def getinfo(self):
