@@ -4,13 +4,13 @@ import base64
 import marshal
 import random
 
-# 확장 유클리드 호제법 알고리즘
-# 정수 m, n 의 최대공약수(Greatest Common Divisor)를 gcd(m,n)와 나타낼 때,
+# 확장 유클리드 호제법 알고리즘 사용
+# 정수 m, n 의 최대공약수를 gcd(m,n)로 나타낼 때,
 # 확장된 유클리드 호제법을 이용하여, am + bn = gcd(m,n)의 해가 되는
-# 정수 a, b 짝을 찾아낸다.
-#
+# 정수 a, b 짝을 찾아낸다. 복잡함
+
 # 인자값 : a, b    - 정수
-# 리턴값 : d, x, y - 유클리드 호제법 해
+# 리턴값 : d, x, y - 유클리드 호제법 사용한 결과의 해
 def euclid(a, b):
     i = -1
     list_r = list()
@@ -101,7 +101,7 @@ def simple_rsa(n):
         return 1
 
 
-# 주어진 bit 수에 해당하는 하나의 홀수를 생성한다.
+# 주어진 bit 수에 해당하는 하나의 홀수를 생성함
 # 인자값 : gen_bit - 생성할 홀수의 bit 수
 # 리턴값 : 홀수
 def generate_odd(gen_bit):
@@ -110,25 +110,23 @@ def generate_odd(gen_bit):
     b = ''
     for i in range(gen_bit - 1):
         b += str(int(random.uniform(1, 10)) % 2)
-    b += '1'  # 마지막 bit에 1을 추가하여 홀수를 만든다.
+    b += '1'  # 마지막 bit에 1을 추가하여 홀수 만들기
 
     return int(b, 2)
 
 
-# 주어진 bit 수에 해당하는 하나의 소수를 생성한다.
+# 주어진 bit 수에 해당하는 하나의 소수를 생성함
 # 인자값 : gen_bit - 생성할 소수의 bit 수
 # 리턴값 : 소수
 def generate_prime(gen_bit):
     while 1:
-        p = generate_odd(gen_bit)  # 홀수를 만든다.
-        if simple_rsa(p) == 1:  # 소수일 가능성 체크한다.
+        p = generate_odd(gen_bit)  # 홀수 만들기
+        if simple_rsa(p) == 1:  # 소수일 가능성 체크
             return p
 
-# n보다 작고, n과 서로소인 정수 e를 찾는다.
-# 또한 확장 유클리드 호제법을 이용해서 d * e / n으로 나눴을때 나머지가 1인
-# 정수 d를 찾는다.
-# 인자값 : n - 정수
-# 리턴값 : e, d
+# n보다 작고, n과 서로소인 정수 e를 찾기
+# 또한 확장 유클리드 호제법을 이용해서 d * e / n으로 나눴을때 나머지가 1인 정수 d를 찾기
+# 인자값 : n - 정수, 리턴값 : e, d
 def get_number(n):
     while 1:
         t = int(random.uniform(2, 1000))
@@ -136,10 +134,8 @@ def get_number(n):
         if d == 1:  # 나머지가 1인가?
             return t, x
 
-
-# 숫자를 문자열로 변환한다. 암호화를 쉽게 하기 위해 문자열을 숫자로 바꾼다.
-# 인자값 : val - 숫자
-# 리턴값 : 문자열
+# 숫자를 문자열로 변환함. 암호화를 쉽게 하기 위해 문자열을 숫자로 바꿈
+# 인자값 : val - 숫자, 리턴값 : 문자열
 def to_string(val):
     ret = ''
     for i in range(32):
@@ -152,9 +148,8 @@ def to_string(val):
     return ret
 
 
-# 암호화를 쉽게 하기 위해 문자열을 숫자로 바꾼다.
-# 인자값 : buf - 문자열
-# 리턴값 : 숫자
+# 암호화를 쉽게 하기 위해 문자열을 숫자로 바꿈
+# 인자값 : buf - 문자열, 리턴값 : 숫자
 def to_num(buf):
     plantext_ord = 0
     for i in range(len(buf)):
@@ -163,9 +158,8 @@ def to_num(buf):
     return plantext_ord
 
 
-# rsa 키를 생성한다.
-# 인자값 : pu_fname - 공개키 파일 이름
-#         pr_fname - 개인키 파일 이름
+# rsa 키를 생성
+# 인자값 : pu_fname - 공개키 파일 이름, pr_fname - 개인키 파일 이름
 # 리턴값 : 키 생성 성공 여부
 def create_key(pu_fname='key.prk', pr_fname='key.skr', debug=False):
     p = generate_prime(128)  # 128bit 소수 생성
@@ -180,27 +174,26 @@ def create_key(pu_fname='key.prk', pr_fname='key.skr', debug=False):
     public_key = [e, n]  # 공개키
     private_key = [d, n]  # 개인키
 
-    # 공개키와 개인키를 base64로 구성한다.
+    # 공개키와 개인키를 base64로 구성
     public_64 = base64.b64encode(marshal.dumps(public_key))
     private_64 = base64.b64encode(marshal.dumps(private_key))
 
     try:
-        # 공개키와 개인키를 파일로 만든다.
+        # 공개키와 개인키를 파일로 만들기
         open(pu_fname, 'wt').write(public_64)
         open(pr_fname, 'wt').write(private_64)
     except IOError:
         return False
 
-    # 공개키와 개인키가 생성되었다.
+    # 공개키와 개인키가 생성됨
     if debug:
         print('[*] Make key : %s, %s' % (pu_fname, pr_fname))
 
     return True
 
 
-# 주어진 key 파일을 읽어 rsa 키로 변환한다.
-# 인자값 : key_filename - rsa 키 파일
-# 리턴값 : rsa 키
+# 주어진 key 파일을 읽어 rsa 키로 변환
+# 인자값 : key_filename - rsa 키 파일,    리턴값 : rsa 키
 def to_rsa_key(key_filename):
     try:
         with open(key_filename, 'rt') as fp:
@@ -213,10 +206,9 @@ def to_rsa_key(key_filename):
         return None
 
 
-# 주어진 버퍼와 rsa 키를 이용해서 암/복호화를 한다.
-# 인자값 : buf - 암/복호화 대상 버퍼
-#         key - rsa 키
-# 리턴값 : 암/복호화된 결과물
+# 주어진 버퍼와 rsa 키를 이용해서 암/복호화
+# 인자값 : buf - 암/복호화 대상 버퍼, key - rsa 키
+# 리턴값 : 암/복호화된 결과
 def crypt(buf, key):
     plantext_ord = to_num(buf)
 
