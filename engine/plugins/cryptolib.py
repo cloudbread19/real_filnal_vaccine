@@ -13,7 +13,7 @@ def md5(data):
 
 # CLBMain 클래스
 class CLBMain:
-    def init(self, plugins_path, verbose=False):  # 플러그인 엔진 초기화 단계
+    def init(self, plugins_path):  # 플러그인 엔진 초기화 단계
         return 0  # 플러그인 엔진 초기화 성공
 
     def uninit(self):  # 플러그인 엔진 종료

@@ -6,7 +6,7 @@ import cryptolib
 class CLBMain:
     # 플러그인 엔진 초기화
     # 입력값 : plugins_path - 플러그인 엔진의 위치, 리턴값 : 0 - 성공
-    def init(self, plugins_path, verbose=False):  # 플러그인 엔진 초기화
+    def init(self, plugins_path):  # 플러그인 엔진 초기화
         return 0  # 플러그인 엔진 초기화 성공
 
     # 플러그인 엔진을 종료 (리턴값 0이면 성공)
