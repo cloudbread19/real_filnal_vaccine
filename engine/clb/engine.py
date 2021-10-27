@@ -89,7 +89,6 @@ class Engine:
         clb_list=[] #우선순위 목록
 
         decrypt_cloudbread_clb=clbfile.CLB(cloudbread_kmd_file, pu)    #cloudbread.clb 파일 복호화
-
         if decrypt_cloudbread_clb.body:  #cloudbread.clb가 읽혔는지?
             msg=StringIO.StringIO(decrypt_cloudbread_clb.body)
 
@@ -122,8 +121,7 @@ class EngineInstance:
         self.set_options()  # 기본 옵션 설정
 
         self.clbmain_instance=[]    # 모든 플러그인의 CLBMain 인스턴스
-
-        self.rezip_info=[]
+        self.rezip_info=[] # zip 파일에 대한 정보
 
         self.final_detect={}
         self.identified_virus=set() # 새로운 악성코드 개수를 구하기 위해 사용
@@ -167,13 +165,14 @@ class EngineInstance:
             except AttributeError:
                 continue
 
-    def get_info(self):
+    def get_info(self): # 이 친구도 수정하고, get virus_num 도 수정해야함
         engine_info = []  # 플러그인 엔진 정보
 
         if self.debug:
             print '[*] CLBMain.getinfo() :'
 
         for instance in self.clbmain_instance:
+
             try:
                 ret = instance.get_info()
                 engine_info.append(ret)
@@ -186,7 +185,6 @@ class EngineInstance:
                 continue
 
         return engine_info
-
 
     # 백신 엔진의 악성코드 검사 결과를 초기화
     def set_final_detect(self):
@@ -202,9 +200,9 @@ class EngineInstance:
     # 백신 엔진의 악성코드 검사 결과
     def get_result(self):
         # 지금까지 발견한 새로운 악성코드의 수를 카운트
+        # 추가 필요해보임.
         self.final_detect['Detected_Viruses'] = len(self.identified_virus)
         return self.final_detect
-
 
     # 플러그인 엔진이 진단/치료 할 수 있는 악성코드 목록을 얻음
     # 리턴값 : 악성코드 목록 (콜백함수 사용시 아무런 값도 없음)
@@ -301,12 +299,14 @@ class EngineInstance:
 
         while len(file_detect_list):
             try:
-                file_list=file_detect_list.pop(0) # 검사대상 파일을 하나 가짐
+                file_list = file_detect_list.pop(0)  # 검사대상 파일을 하나 가짐
                 file_name = file_list.get_target_file()
+
+                #print(111) - 수정 필요
 
                 # 폴더면 내부 파일리스트만 검사 대상 리스트에 등록
                 if os.path.isdir(file_name):
-                    if file_name[-1]==os.sep:
+                    if file_name[-1] == os.sep:
                         file_name=file_name[:-1]
 
                     # 콜백 호출 또는 검사 리턴값 생성
@@ -347,8 +347,8 @@ class EngineInstance:
 
                     if unzip_file: # 악성코드 진단 개수 카운트
                         self.final_detect['Detected_Viruses']+=1
+                        self.final_detect['Detected_Files']+=1 # 새로 추가 -> 출력문
                         self.identified_virus.update([virus])
-
 
                     # 콜백 호출 또는 검사 리턴값 생성
                     detect_result['bool_detect'] = unzip_file  # 악성코드 발견 여부
@@ -427,6 +427,8 @@ class EngineInstance:
         except IOError:
             self.final_detect['IO_errors'] +=1   #파일 I/O Error 발생수
 
+            # 아마 여기서 잘 안 들어가져서 I/0 발생 하는 듯함
+
         return False, '', -1, -1
 
     # 플러그인 엔진이 악성코드 치료하도록 함
@@ -470,7 +472,7 @@ class EngineInstance:
         for i in self.clbmain_instance:
             try:
                 tmp=i.get_info()
-
+                print(tmp)
                 if 'virus_num' in tmp:
                     virus_num+=tmp['virus_num']
             except AttributeError:
@@ -510,7 +512,7 @@ class EngineInstance:
         return None
 
     #플러그인 엔진에게 압축파일의 내부 리스트를 요청
-    def zip_file_list(self, file_struct, fileformat):
+    def zip_file_list(self, file_struct, fileformat): # 잘 작동함
         zip_file_list=[]
         file_detect_list=[]
 

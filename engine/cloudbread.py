@@ -235,7 +235,7 @@ def detect_callback(detect_result):
 
     if gui_options.opt_prompt:     #프롬프트 옵션이 설정되었는가?
         while True and detect_result['bool_detect']:
-            cprint('Disinfect/Delete/Ignore/Quie? (d/l/i/q):', FOREGROUND_CYAN |FOREGROUND_INTENSITY)
+            cprint('Disinfect/Delete/Ignore/Quiet? (d/l/i/q):', FOREGROUND_CYAN |FOREGROUND_INTENSITY)
             ch=getch().lower()
             print ch
 
@@ -253,7 +253,6 @@ def detect_callback(detect_result):
         return clb.menu.MENU_DELETE
 
     return clb.menu.MENU_IGNORE #default 값: 악성코드 치료 무시
-
 
 # treat 콜백 함수
 def treat_callback(detect_result, action_type):
@@ -292,8 +291,6 @@ def delete_callback(file):
 
         display_line(name_show, message, message_color)
 
-
-
 # print_result(result)
 # 악성코드 검사 결과를 출력한다.
 # 입력값 : result - 악성코드 검사 결과
@@ -304,8 +301,11 @@ def print_detect(result):
     cprint('Results:\n', FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Folders             :%d\n' % result['Folders'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Files               :%d\n' % result['Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
+    cprint('ZIP Files           :%d\n' % result['ZIP_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
     cprint('Detected Files      :%d\n' % result['Detected_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Detected Viruses    :%d\n' % result['Detected_Viruses'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
+    cprint('Treated_Files       :%d\n' % result['Treated_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
+    cprint('Deleted_Files       :%d\n' % result['Deleted_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
     cprint('I/O errors          :%d\n' % result['IO_errors'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
 
     print
