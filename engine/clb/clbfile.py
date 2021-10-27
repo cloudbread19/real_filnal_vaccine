@@ -25,7 +25,7 @@ def make_clb_file(target_file, debug=False):
     if file.split('.')[1] == 'py':  # PY 컴파일 하기
         py_compile.compile(file)    # 컴파일 진행
         pyc_name = file+'c'         # 컴파일 이후 파일명 변경함
-    else:  # 파이썬 파일이 아닐 경우 확장자를 pyc로 하여 복사한다.
+    else:  # 파이썬 파일이 아닐 경우 확장자를 pyc로 하여 복사
         pyc_name = file.split('.')[0]+'.pyc'
         shutil.copy(file, pyc_name)
 
@@ -64,7 +64,7 @@ def make_clb_file(target_file, debug=False):
     random.seed()
 
     while 1:
-        tmp_clb_data = ''  # 임시용 본문 데이터
+        tmp_clb_data = ''  # 임시 본문 데이터
 
         # RC4 알고리즘에 사용할 128bit 랜덤키 생성
         random_key = ''
@@ -79,9 +79,9 @@ def make_clb_file(target_file, debug=False):
         # 암호화된 RC4 키를 복호화
         decrypt_key = rsa.crypt(encrypt_key, rsa_public)  # 공개키로 복호화
 
-        # 생성된 RC4 키에 문제 없음을 확인한다.
+        # 생성된 RC4 키에 문제 없음을 확인
         if random_key == decrypt_key and len(random_key) == len(decrypt_key):
-            # 개인키로 암호화 된 RC4 키를 임시 버퍼에 추가한다.
+            # 개인키로 암호화 된 RC4 키를 임시 버퍼에 추한다.
             tmp_clb_data += encrypt_key
 
             # 생성된 pyc 파일 압축하기
@@ -89,15 +89,15 @@ def make_clb_file(target_file, debug=False):
             b = zlib.compress(a)
 
             rc4_encrypt = rc4.RC4()  # RC4 알고리즘 사용
-            rc4_encrypt.set_key(random_key)  # 해당 알고리즘에 key 적용하기
+            rc4_encrypt.set_key(random_key)  # RC4 알고리즘에 key를 적용
 
-            # 압축된 pyc 파일 이미지를 RC4로 암호화한다.
+            # 압축된 pyc 파일 이미지를 RC4로 암호화
             c = rc4_encrypt.crypt(b)
 
-            rc4_encrypt = rc4.RC4()
-            rc4_encrypt.set_key(random_key)
+            rc4_encrypt = rc4.RC4()  # RC4 알고리즘 사용
+            rc4_encrypt.set_key(random_key)  # RC4 알고리즘에 key를 적용
 
-            # 암호화한 압축된 pyc 파일 이미지 복호화하여 결과가 같은지를 확인한다.
+            # 암호화한 압축된 pyc 파일 이미지 복호화하여 결과가 같은지를 확인
             if rc4_encrypt.crypt(c) != b:
                 continue
 
@@ -187,7 +187,7 @@ class CLBConstants:
 
 # CLB 클래스
 class CLB(CLBConstants):
-    # 클래스를 초기화 한다.
+    # 클래스를 초기화
     # 인자값 : file - CLB 파일 이름,   pu   - 복호화를 위한 공개키
     def __init__(self, file, pu):
         self.file = file  # CLB 파일 이름
@@ -202,8 +202,8 @@ class CLB(CLBConstants):
         if self.file:
             self.decrypt(self.file)  # 파일을 복호화한다.
 
-    # clb 파일을 복호화
-    # 인자값 : file - CLB 파일 이름
+    # CLB 파일을 복호화
+    # 인자값 : fname - CLB 파일 이름
     def decrypt(self, file, debug=False):
         # CLB 파일을 열고 시그너처를 체크한다.
         with open(file, 'rb') as fp:
@@ -225,15 +225,15 @@ class CLB(CLBConstants):
         # CLB 파일에서 MD5 읽기
         md5 = self.get_md5()
 
-        # 무결성?확인하기
+        # 무결성? 체크
         md5hash = repeat_md5(self.encrypted_data[:self.MD5_POSITION], 3)
         if md5 != md5hash.decode('hex'):
             raise CLB_Error('Invalid KMD MD5 hash.')
 
-        # CLB에서 RC4 키 읽기
+        # CLB 파일에서 RC4 키 읽기
         self.rc4_key = self.get_rc4_key()
 
-        # CLB에서 본문 읽기
+        # CLB 파일에서 본문 읽기
         clb_body = self.get_body()
         if debug:
             print(len(clb_body))
@@ -243,7 +243,7 @@ class CLB(CLBConstants):
         if debug:
             print(len(self.body))
 
-    # clb 파일의 rc4 키를 얻는다.
+    # CLB 파일의 rc4 키를 얻는다.
     # 리턴값 : rc4 키
     def get_rc4_key(self):
         clb_rc4_key = self.encrypted_data[self.RC4_KEY_POSITION:
@@ -251,7 +251,7 @@ class CLB(CLBConstants):
                                 + self.RC4_KEY_LENGTH]
         return rsa.crypt(clb_rc4_key, self.rsa_public)
 
-    # clb 파일의 body를 얻는다.
+    #clb 파일의 body를 얻는다.
     # 리턴값 : body
     def get_body(self):
         clb_body = self.encrypted_data[self.RC4_KEY_POSITION
@@ -261,24 +261,21 @@ class CLB(CLBConstants):
         r.set_key(self.rc4_key)
         return r.crypt(clb_body)
 
-    # clb 파일의 md5를 얻는다.
+    # CLB 파일의 md5를 얻는다.
     # 리턴값 : md5
     def get_md5(self):
         clb_md5 = self.encrypted_data[self.MD5_POSITION:]
         return rsa.crypt(clb_md5, self.rsa_public)
 
-# 주어진 모듈 이름으로 파이썬 코드를 메모리에 로딩하기
+# 주어진 모듈 이름으로 파이썬 코드를 메모리에 로딩한다.
 # 입력값 : mod_name - 모듈 이름
-# 리턴값 : 로딩된 모듈 Object
 def memory_loading(mod_name, signature):
-    #print(mod_name)
-    # 여기도 문제있음
     if signature[:4] == '03F30D0A'.decode('hex'):  # pyc 시그너처가 존재하는가?
         try:
-            code = marshal.loads(signature[8:])  # pyc에서 파이썬 코드를 로딩한다.
-            module = imp.new_module(mod_name)  # 새로운 모듈 생성한다.
-            exec (code, module.__dict__)  # pyc 파이썬 코드와 모듈을 연결한다.
-            sys.modules[mod_name] = module  # 전역에서 사용가능하게 등록한다.
+            code = marshal.loads(signature[8:])  # pyc에서 파이썬 코드를 로딩
+            module = imp.new_module(mod_name)  # 새로운 모듈 생성
+            exec (code, module.__dict__)  # pyc 파이썬 코드와 모듈을 연결
+            sys.modules[mod_name] = module  # 전역에서 사용가능하게 등록
 
             return module
         except:

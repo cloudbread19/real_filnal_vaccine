@@ -80,6 +80,7 @@ def print_error(msg):
     cprint("Error: ", FOREGROUND_RED|FOREGROUND_INTENSITY)
     print(msg)
 
+
 def convert_display_filename(real_filename):
     # 출력용 이름
     fsencoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
@@ -174,7 +175,7 @@ def define_options():
 def usage():
     print('\nUsage: cloudbread.py path[s] [options]')
 
-# 백신 옵션 분석
+# 백신 옵션을 분석
 def vaccine_options():
     parser = define_options()  # 백신 옵션 정의
 
@@ -193,7 +194,7 @@ def vaccine_options():
         return options, args
 
 
-# 백신 옵션 출력
+# 백신의 옵션을 출력
 def print_options():
     options_string = '''Options:
         -f,  --files           scan files *
@@ -236,7 +237,7 @@ def detect_callback(detect_result):
         while True and detect_result['bool_detect']:
             cprint('Disinfect/Delete/Ignore/Quie? (d/l/i/q):', FOREGROUND_CYAN |FOREGROUND_INTENSITY)
             ch=getch().lower()
-            print(ch)
+            print ch
 
             if ch == 'd':
                 return clb.menu.MENU_DISINFECT  #악성코드 치료
@@ -291,6 +292,8 @@ def delete_callback(file):
 
         display_line(name_show, message, message_color)
 
+
+
 # print_result(result)
 # 악성코드 검사 결과를 출력한다.
 # 입력값 : result - 악성코드 검사 결과
@@ -310,7 +313,7 @@ def print_detect(result):
 #listvirus의 콜백함수
 def listvirus_callback(plugin_name, vnames):
     for i in vnames:
-        print('%-50s [%s.clb]'%(i, plugin_name))
+        print('%-50s [%s.kmd]'%(i, plugin_name))
 
 
 def main():
@@ -337,14 +340,14 @@ def main():
         print_options()
         return 0
 
-    # 백신 엔진 구동
-    clb_engine_cls=clb.engine.Engine()    # 엔진 클래스
-    if not clb_engine_cls.set_plugins('plugins'):   # 플러그인 엔진 설정
+    #백신 엔진 구동
+    clb_engine_cls=clb.engine.Engine()    #엔진 클래스
+    if not clb_engine_cls.set_plugins('plugins'):   #플러그인 엔진 설정
         print('')
         print_error('CloudBread AntiVirus Engine set_plugins')
         return 0
 
-    clb_engine_inst=clb_engine_cls.create_engine_instance()    # 백신 엔진 인스턴스 생성
+    clb_engine_inst=clb_engine_cls.create_engine_instance()    #백신 엔진 인스턴스 생성
 
     if not clb_engine_inst:
         print('')
@@ -356,38 +359,39 @@ def main():
         print_error('CloudBread AntiVirus Engine init')
         return 0
 
-    # 엔진 버전 출력
+    #엔진 버전 출력
     engine_version=clb_engine_inst.get_version()
     msg='\rLast Updated %s UTC\n'%engine_version.ctime()
     cprint(msg,FOREGROUND_GREY)
 
-    # 진단/치료 가능한 악성코드 수 출력
+    #진단/치료 가능한 악성코드 수 출력
     msg='Signature number: %d\n\n'%clb_engine_inst.get_virus_num()
     cprint(msg, FOREGROUND_GREY)
 
-    clb_engine_inst.set_options(options)    # 옵션 설정
+    clb_engine_inst.set_options(options)    #옵션 설정
 
     # 악성코드 목록 출력
     if options.opt_vlist is True:
         clb_engine_inst.having_virus_list(listvirus_callback)
     else:
         if args:
-            clb_engine_inst.set_final_detect()    # 검사 결과를 초기화시킴
+            clb_engine_inst.set_final_detect()    #악성코드 검사 결과를 초기화
 
             #검사용 path
             for scan_path in args:
                 scan_path=os.path.abspath(scan_path)
 
-                if os.path.exists(scan_path):   #폴더나 파일이 존재 여부 확인
+                if os.path.exists(scan_path):   #폴더나 파일이 존재하는가?
                     clb_engine_inst.detect(scan_path, detect_callback)
                 else:
                     print_error('Invalid path: \'%s\''%scan_path)
 
-            # 최종 검사 결과 화면 출력
+            #악성코드 검사 결과 출력
             show_result=clb_engine_inst.get_result()
             print_detect(show_result)
 
     clb_engine_inst.uninit()
+
 
 if __name__=='__main__':
     main()

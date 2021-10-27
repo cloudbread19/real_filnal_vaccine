@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Plugin-Vaccine-Engine-main.iml" filepath="$PROJECT_DIR$/.idea/Plugin-Vaccine-Engine-main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Plugin-Vaccine-Engine.iml" filepath="$PROJECT_DIR$/.idea/Plugin-Vaccine-Engine.iml" />
     </modules>
   </component>
 </project>

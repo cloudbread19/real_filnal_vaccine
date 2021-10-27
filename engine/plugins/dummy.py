@@ -2,7 +2,7 @@
 
 import os
 
-# CLBMain 클래스
+# KavMain 클래스
 class CLBMain:
     # 입력값 : plugins_path - 플러그인 엔진의 위치
     def init(self, plugins_path):  # 플러그인 엔진 초기화 단계
@@ -13,7 +13,7 @@ class CLBMain:
 
         return 0  # 플러그인 엔진 초기화 성공
 
-    # 플러그인 엔진 종료 (0일 경우, 성공)
+    ## 플러그인 엔진 종료 (0일 경우, 성공)
     def uninit(self):
         del self.name  # 메모리 해제 (악성코드 이름 관련)
         del self.pattern  # 메모리 해제 (악성코드 패턴)
@@ -54,9 +54,9 @@ class CLBMain:
     # 진단/치료 가능한 악성코드의 리스트
     # 리턴값 : 악성코드 리스트
     def having_virus_list(self):
-        vlist = list() # 리스트형 변수 선언
-        vlist.append(self.name)  # 진단/치료하는 악성코드 이름 등록
-        return vlist
+        list_view = list()  # 리스트형 변수 선언
+        list_view.append(self.name)  # 진단/치료하는 악성코드 이름 등록
+        return list_view
 
     # 플러그인 엔진의 주요 정보
     def getinfo(self):

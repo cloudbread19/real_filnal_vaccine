@@ -101,7 +101,7 @@ def simple_rsa(n):
         return 1
 
 
-# 주어진 bit 수에 해당하는 하나의 홀수를 생성함
+# 주어진 bit 수에 해당하는 하나의 홀수를 생성한다.
 # 인자값 : gen_bit - 생성할 홀수의 bit 수
 # 리턴값 : 홀수
 def generate_odd(gen_bit):
@@ -110,7 +110,7 @@ def generate_odd(gen_bit):
     b = ''
     for i in range(gen_bit - 1):
         b += str(int(random.uniform(1, 10)) % 2)
-    b += '1'  # 마지막 bit에 1을 추가하여 홀수 만들기
+    b += '1'  # 마지막 bit에 1을 추가하여 홀수 만들기.
 
     return int(b, 2)
 
@@ -120,7 +120,7 @@ def generate_odd(gen_bit):
 # 리턴값 : 소수
 def generate_prime(gen_bit):
     while 1:
-        p = generate_odd(gen_bit)  # 홀수 만들기
+        p = generate_odd(gen_bit)  # 홀수를 만들기.
         if simple_rsa(p) == 1:  # 소수일 가능성 체크
             return p
 
@@ -133,6 +133,7 @@ def get_number(n):
         d, x, y = euclid(t, n)
         if d == 1:  # 나머지가 1인가?
             return t, x
+
 
 # 숫자를 문자열로 변환함. 암호화를 쉽게 하기 위해 문자열을 숫자로 바꿈
 # 인자값 : val - 숫자, 리턴값 : 문자열
@@ -157,11 +158,10 @@ def to_num(buf):
 
     return plantext_ord
 
-
 # rsa 키를 생성
 # 인자값 : pu_fname - 공개키 파일 이름, pr_fname - 개인키 파일 이름
 # 리턴값 : 키 생성 성공 여부
-def create_key(pu_fname='key.pkr', pr_fname='key.skr', debug=False):
+def create_key(pu_fname='key.prk', pr_fname='key.skr', debug=False):
     p = generate_prime(128)  # 128bit 소수 생성
     q = generate_prime(128)  # 128bit 소수 생성
 

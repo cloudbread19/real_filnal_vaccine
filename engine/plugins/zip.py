@@ -5,26 +5,26 @@ import zipfile
 # CLBMain 클래스
 class CLBMain:
     # 플러그인 엔진 초기화
-    def init(self, plugins_path):  # 플러그인 엔진 위치 표시
+    def init(self, plugins_path):  # 플러그인 엔진 초기화
         return 0  # 플러그인 엔진 초기화 성공
 
     # 플러그인 엔진 종료(리턴값 0이면 성공임)
     def uninit(self):
-        return 0
+        return 0  # 플러그인 엔진 종료 성공
 
-    # 파일 포멧 분석
+    #파일 포멧 분석
     def analyze_file_format(self, filehandle, filename):
         fileformat={}
         a=filehandle
-        if a[0:4]=='PK\x03\x04':    # 파일 헤더 체크
-            fileformat['size']=len(a)  # 포멧 주요 정보 저장(크기)
+        if a[0:4]=='PK\x03\x04':    #파일 헤더 체크
+            fileformat['size']=len(a)  #포멧 주요 정보 저장(크기)
 
             result={'zip_format':fileformat}
             return result
 
         return None
 
-    # 압축 파일 내부의 파일 목록 얻기
+    #압축 파일 내부의 파일 목록 얻기
     def zip_struct_list(self, filename, fileformat):
         zip_struct_list = []  # 검사 대상 정보를 모두 가짐
 
@@ -37,7 +37,7 @@ class CLBMain:
 
         return zip_struct_list
 
-    # 압축 해제
+    #압축 해제
     def unzip(self, zip_engine_id, zip_file, zipped_file):
         if zip_engine_id== 'zip':
             zfile=zipfile.ZipFile(zip_file)
@@ -46,13 +46,13 @@ class CLBMain:
             return data
         return None
 
-    # 리턴값: 압축 성공 여부
+    #리턴값: 압축 성공 여부
     def bool_rezip(self, zip_engine_id, zip_file, file_infos):
         if zip_engine_id== 'zip':
             zf=zipfile.ZipFile(zip_file, 'w')
 
             for i in file_infos:
-                rname=i.get_target_file()  # 검사 대상 파일
+                rname=i.get_target_file()  #검사 대상 파일
 
                 try:
                     with open(rname, 'rb') as fp:

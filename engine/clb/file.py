@@ -29,7 +29,7 @@ class FileStruct:
         self.file_structure['bool_rezip'] = False  # 재압축 가능 여부
         self.file_structure['level'] = level  # 압축 깊이
 
-    # 파일에 대한 압축 여부 확인
+    # 파일에 대한 압축 여부를 확인
     def bool_zip(self):
         return self.file_structure['bool_zip']
 
@@ -61,7 +61,7 @@ class FileStruct:
     # 최상위 파일 이름 확인
     # 리턴값 : 압축일 경우 압축 파일명
     def root_file(self):
-        return self.file_structure['root_file']
+        return self.file_structure['root_file']  # 출력용
 
 
     # 압축 파일 내부를 표현하기 위한 파일 이름을 확인
@@ -70,6 +70,7 @@ class FileStruct:
         return self.file_structure['zip_structure_file']
 
     # 악성코드 치료로 인해 파일이 수정됨 여부를 확인
+    # 리턴값 : True or False
     def bool_modified(self):
         return self.file_structure['bool_modified']
 
@@ -81,16 +82,17 @@ class FileStruct:
 
     # 악성코드로 치료 후 파일을 재압축 할 수 있는지 여부를 확인
     # 리턴값 : kernel.MASTER_IGNORE, kernel.MASTER_PACK, kernel.MASTER_DELETE
-    def bool_rezip(self):  # 재압축 가능 여부
+    def bool_rezip(self):
         return self.file_structure['bool_rezip']
 
-    # 압축 깊이
+
+    # 압축의 깊이
     # 리턴값 : 0, 1, 2 ...
     def get_level(self):
         return self.file_structure['level']
 
-    # 압축의 깊이를 설정한다.
-    # 입력값 : level
+    # 압축의 깊이를 설정
+    # 입력값 : level - 압축 깊이
     def set_level(self, level):
         self.file_structure['level'] = level
 
