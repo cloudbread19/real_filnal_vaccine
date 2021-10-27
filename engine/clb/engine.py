@@ -52,7 +52,7 @@ class Engine:
             decrypt_all=clbfile.CLB(clb_path, public_key)   #모든 clb 파일을 복호화
             memory_loading=clbfile.memory_loading(clb_file.split('.')[0], decrypt_all.body)
 
-            print(memory_loading)  # # 여기여기여기 선생님들 여기가 안됩니다. -> eicar 변수변경 해결
+            # print(memory_loading)  # # 여기여기여기 선생님들 여기가 안됩니다. -> eicar 변수변경 해결
 
             if memory_loading:  # 메모리 로딩 성공
                 self.clb_modules.append(memory_loading)
