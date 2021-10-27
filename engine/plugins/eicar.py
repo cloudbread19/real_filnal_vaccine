@@ -20,7 +20,6 @@ class CLBMain:
         try:
             fh = filehandle
             size = os.path.getsize(filename)  # 검사 대상 파일 크기를 구하기
-            print("size of eicar: %s \n" %(size))
 
             if size == 66:  # EICAR Test 악성코드의 크기와 일치하는가?
                 # 크기가 일치한다면 MD5 해시 계산
