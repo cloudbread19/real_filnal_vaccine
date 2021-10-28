@@ -299,13 +299,11 @@ def print_detect(result):
     print
 
     cprint('Results:\n', FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('Folders             :%d\n' % result['Folders'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('Files               :%d\n' % result['Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('ZIP Files           :%d\n' % result['ZIP_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
+    cprint('Files               :%d\n' % result['Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Detected Files      :%d\n' % result['Detected_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Detected Viruses    :%d\n' % result['Detected_Viruses'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
     cprint('Treated_Files       :%d\n' % result['Treated_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
-    cprint('Deleted_Files       :%d\n' % result['Deleted_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
     cprint('I/O errors          :%d\n' % result['IO_errors'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
 
     print

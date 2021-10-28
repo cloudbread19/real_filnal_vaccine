@@ -128,7 +128,7 @@ class EngineInstance:
 
     def init(self):
         clb_instance_list=[]    # 최종 인스턴스 생성 리스트
-        print(len(self.clbmain_instance))
+        #print(len(self.clbmain_instance))
 
         if self.debug:
             print('[*] CLBMain.init(): ')
@@ -165,14 +165,13 @@ class EngineInstance:
             except AttributeError:
                 continue
 
-    def get_info(self): # 이 친구도 수정하고, get virus_num 도 수정해야함
+    def get_info(self):
         engine_info = []  # 플러그인 엔진 정보
 
         if self.debug:
             print '[*] CLBMain.getinfo() :'
 
-        for instance in self.clbmain_instance:
-
+        for instance in self.clbmain_instance: # clbmain_instance 내 값 탐지 못함
             try:
                 ret = instance.get_info()
                 engine_info.append(ret)
@@ -470,9 +469,8 @@ class EngineInstance:
         virus_num=0 #진단/치료 가능한 악성코드 수
 
         for i in self.clbmain_instance:
-            try:
-                tmp=i.get_info()
-                print(tmp)
+            try: # 아예 try 문 안으로 들어오지 않는 상황
+                tmp=i.getinfo()
                 if 'virus_num' in tmp:
                     virus_num+=tmp['virus_num']
             except AttributeError:
