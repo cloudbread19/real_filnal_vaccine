@@ -16,15 +16,15 @@ YEAR = BUILD_DATE[len(BUILD_DATE) - 4:]
 gui_options = None  # 옵션
 
 # 콘솔에 색깔 출력을 위한 클래스 및 함수들
-FOREGROUND_BLACK = 0x0000
-FOREGROUND_BLUE = 0x0001
-FOREGROUND_GREEN = 0x0002
-FOREGROUND_CYAN = 0x0003
-FOREGROUND_RED = 0x0004
-FOREGROUND_MAGENTA = 0x0005
-FOREGROUND_YELLOW = 0x0006
-FOREGROUND_GREY = 0x0007
-FOREGROUND_INTENSITY = 0x0008
+# FOREGROUND_BLACK = 0x0000
+# FOREGROUND_BLUE = 0x0001
+# FOREGROUND_GREEN = 0x0002
+# FOREGROUND_CYAN = 0x0003
+# FOREGROUND_RED = 0x0004
+# FOREGROUND_MAGENTA = 0x0005
+# FOREGROUND_YELLOW = 0x0006
+# FOREGROUND_GREY = 0x0007
+# FOREGROUND_INTENSITY = 0x0008
 
 SHORT = c_short
 WORD = c_ushort
@@ -66,28 +66,28 @@ def get_text_attr():
 def set_text_attr(color):
     SetConsoleTextAttribute(stdout_handle, color)
 
-def cprint(msg, color):
+def cprint(msg):
     default_colors = get_text_attr()
-    default_bg = default_colors & 0x00F0
+    default_bg = default_colors
 
-    set_text_attr(color | default_bg)
+    set_text_attr(default_bg)
     sys.stdout.write(msg)
     set_text_attr(default_colors)
 
     sys.stdout.flush()
 
 def print_error(msg):
-    cprint("Error: ", FOREGROUND_RED|FOREGROUND_INTENSITY)
+    cprint("Error: ")
     print(msg)
 
 
 def convert_display_filename(real_filename):
     # 출력용 이름
     fsencoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
-    display_filename = unicode(real_filename, fsencoding).encode(sys.stdout.encoding,'replace')
+    display_filename = unicode(real_filename, fsencoding).encode('cp949')  # 서버상 오류 발생하여 소스 코드 수정
     return display_filename
 
-def display_line(filename, message, message_color):
+def display_line(filename, message):
     filename += ' '
     filename = convert_display_filename(filename)
     len_fname = len(filename)
@@ -107,8 +107,8 @@ def display_line(filename, message, message_color):
 
         fname = '%s ... %s' % (fname1, fname2)
 
-    cprint(fname + ' ', FOREGROUND_GREY)
-    cprint(message + '\n', message_color)
+    cprint(fname + ' ')
+    cprint(message + '\n')
 
 # 구름빵 백신 첫화면 출력
 def logo():
@@ -118,7 +118,7 @@ def logo():
 
     print('===========================================================')
     a = logo % (sys.platform.upper(), VERSION, BUILD_DATE, YEAR)
-    cprint(a, FOREGROUND_CYAN | FOREGROUND_INTENSITY)
+    cprint(a)
     print('===========================================================')
 
 
@@ -226,16 +226,16 @@ def detect_callback(detect_result):
 
         virus = detect_result['virus']
         message = '%s : %s' %(state, virus)
-        message_color = FOREGROUND_RED |FOREGROUND_INTENSITY
+        # message_color = FOREGROUND_RED |FOREGROUND_INTENSITY
     else:
         message = 'ok'
-        message_color = FOREGROUND_GREY | FOREGROUND_INTENSITY
+        # message_color = FOREGROUND_GREY | FOREGROUND_INTENSITY
 
-    display_line(name_show, message, message_color)
+    display_line(name_show, message)
 
     if gui_options.opt_prompt:     #프롬프트 옵션이 설정되었는가?
         while True and detect_result['bool_detect']:
-            cprint('Disinfect/Delete/Ignore/Quiet? (d/l/i/q):', FOREGROUND_CYAN |FOREGROUND_INTENSITY)
+            cprint('Disinfect/Delete/Ignore/Quiet? (d/l/i/q):')
             ch=getch().lower()
             print ch
 
@@ -269,17 +269,17 @@ def treat_callback(detect_result, action_type):
             message = 'treated'
         elif action_type == clb.menu.MENU_DELETE:
             message = 'deleted'
-
-        message_color = FOREGROUND_GREEN | FOREGROUND_INTENSITY
+        #
+        # message_color = FOREGROUND_GREEN | FOREGROUND_INTENSITY
     else:   #수정 실패
         if action_type == clb.menu.MENU_DISINFECT:
             message = 'treatment failed'
         elif action_type == clb.menu.MENU_DELETE:
             message = 'deletion failed'
 
-        message_color = FOREGROUND_RED | FOREGROUND_INTENSITY
+        # message_color = FOREGROUND_RED | FOREGROUND_INTENSITY
 
-    display_line(name_show, message, message_color)
+    display_line(name_show, message)
 
 # delete 콜백 함수
 def delete_callback(file):
@@ -287,9 +287,8 @@ def delete_callback(file):
         name_show = file.get_target_file()
 
         message = 'delete'
-        message_color = FOREGROUND_GREEN | FOREGROUND_INTENSITY
 
-        display_line(name_show, message, message_color)
+        display_line(name_show, message)
 
 # print_result(result)
 # 악성코드 검사 결과를 출력한다.
@@ -298,13 +297,13 @@ def print_detect(result):
     print
     print
 
-    cprint('Results:\n', FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('ZIP Files           :%d\n' % result['ZIP_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
-    cprint('Files               :%d\n' % result['Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('Detected Files      :%d\n' % result['Detected_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('Detected Viruses    :%d\n' % result['Detected_Viruses'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
-    cprint('Treated_Files       :%d\n' % result['Treated_Files'], FOREGROUND_GREY | FOREGROUND_INTENSITY) # 새로 추가
-    cprint('I/O errors          :%d\n' % result['IO_errors'], FOREGROUND_GREY | FOREGROUND_INTENSITY)
+    cprint('Results:\n')
+    cprint('ZIP Files           :%d\n' % result['ZIP_Files']) # 새로 추가
+    cprint('Files               :%d\n' % result['Files'])
+    cprint('Detected Files      :%d\n' % result['Detected_Files'])
+    cprint('Detected Viruses    :%d\n' % result['Detected_Viruses'])
+    cprint('Treated_Files       :%d\n' % result['Treated_Files']) # 새로 추가
+    cprint('I/O errors          :%d\n' % result['IO_errors'])
 
     print
 
@@ -360,11 +359,11 @@ def main():
     #엔진 버전 출력
     engine_version=clb_engine_inst.get_version()
     msg='\rLast Updated %s UTC\n'%engine_version.ctime()
-    cprint(msg,FOREGROUND_GREY)
+    cprint(msg)
 
     #진단/치료 가능한 악성코드 수 출력
     msg='Signature number: %d\n\n'%clb_engine_inst.get_virus_num()
-    cprint(msg, FOREGROUND_GREY)
+    cprint(msg)
 
     clb_engine_inst.set_options(options)    #옵션 설정
 
